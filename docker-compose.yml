@@ -1,0 +1,76 @@
+
+services:
+  discovery-service:
+    container_name: discovery-service
+    image: ouday2025/discovery-service:latest
+    ports:
+      - "8761:8761"
+    hostname: eureka
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mysql-container:
+    container_name: mysql-container-offre
+    image: mysql:5.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=OffrePromotion
+    ports:
+      - "3306:3306"
+    depends_on:
+      - discovery-service
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway-service:
+    container_name: gateway-service
+    image: ouday2025/gateway-service:latest
+    ports:
+      - "8093:8093"
+    hostname: gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql-container:
+        condition: service_healthy
+
+  offre-promotion-service:
+    container_name: offre-promotion-service
+    image: ouday2025/offre-promotion-service:latest
+    ports:
+      - "8085:8088"
+    hostname: offre-promotion
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container-offre:3306/OffrePromotion?autoReconnect=true&useSSL=false
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql-container:
+        condition: service_healthy
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:23.0.0
+    command: start-dev --http-port=8180
+    ports:
+      - "8180:8180"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8180"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
