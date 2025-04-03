@@ -3,20 +3,23 @@ package com.example.gateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
-import io.netty.handler.codec.http.HttpObjectDecoder;
-import reactor.netty.http.server.HttpServer;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
+import io.netty.handler.codec.http.HttpObjectDecoder;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.server.HttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @SpringBootApplication
 @EnableDiscoveryClient
 public class GatewayApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
@@ -28,9 +31,9 @@ public class GatewayApplication {
                 .maxHeaderSize(65536) // Augmente la limite des en-têtes à 64 Ko
                 .maxInitialLineLength(4096));
     }
+
     @Bean
     public GlobalFilter customGlobalFilter() {
-        Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
         return new GlobalFilter() {
             @Override
             public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
