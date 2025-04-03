@@ -26,3 +26,4 @@ public class GlobalHeaderFilter implements GlobalFilter, Ordered {
         return Ordered.HIGHEST_PRECEDENCE; // Exécuter ce filtre en premier
     }
 }
+
