@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/offre_promotion/**").permitAll() // Permettre l'accès à toutes les routes de l'API
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -37,4 +38,6 @@ public class SecurityConfig {
         logger.info("Spring Security configuration completed.");
         return http.build();
     }
+
+
 }
