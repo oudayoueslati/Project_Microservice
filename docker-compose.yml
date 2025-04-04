@@ -1,3 +1,5 @@
+version: '3.8'  # Assurez-vous de définir la version de Docker Compose
+
 services:
   discovery-service:
     container_name: discovery-service
@@ -34,7 +36,7 @@ services:
     container_name: gateway-service
     image: ouday2025/gateway-service:latest
     ports:
-      - "8093"  # Notez qu'on ne mappe plus le port 8093 directement
+      - "8093:8093"  # Remplacez 80:8093 par 8093:8093
     hostname: gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -58,13 +60,25 @@ services:
         condition: service_healthy
       mysql-container:
         condition: service_healthy
+      keycloak:  # Ajoutez cette ligne pour la dépendance
+        condition: service_healthy
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:23.0.0
+    command: start-dev --http-port=8180 --hostname-strict=false  # Modifiez cette ligne si nécessaire
     ports:
-      - "8093:80"  # Mappe le port 8093 de l'hôte au port 80 du conteneur Nginx
+      - "8180:8180"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8180"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - gateway-service
+      - keycloak_data:/opt/keycloak/data  # Persist data in this directory
+
+volumes:
+  keycloak_data:  # Declare the volume here
