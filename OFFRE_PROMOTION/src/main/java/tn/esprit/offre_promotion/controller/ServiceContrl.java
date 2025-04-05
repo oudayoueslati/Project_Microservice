@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.offre_promotion.entities.Offer;
 import tn.esprit.offre_promotion.service.IService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +30,7 @@ public class ServiceContrl {
     }
 
     @GetMapping("/AllOffer")
-    public List<Offer> getAllOffers() {
+    public List<Offer> getAllOffer() {
         return service.getAllOffer();
     }
 
@@ -50,13 +49,4 @@ public class ServiceContrl {
         return service.updateById(id, offer);
     }
 
-    @GetMapping("/roles")
-    public Collection<? extends GrantedAuthority> getUserRoles(Authentication authentication) {
-        return authentication.getAuthorities();
-    }
-
-    @GetMapping("/me")
-    public String getAuthenticatedUser(Authentication authentication) {
-        return "Vous êtes connecté en tant que : " + authentication.getName();
-    }
 }
