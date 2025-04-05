@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/offre_promotion") // Bonnes pratiques REST
 public class ServiceContrl {
 
     private final IService service;
