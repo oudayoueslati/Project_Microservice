@@ -4,16 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
-import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
-import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
-
-import java.net.URI;
+import java.util.Collections;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -21,37 +21,45 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http
+        return http
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/offre_promotion/**").authenticated() // Sécurise les routes vers offre-promotion
-                        .anyExchange().permitAll() // Autres routes accessibles
+                        .pathMatchers("/offre_promotion/**").authenticated()
+                        .anyExchange().permitAll()
                 )
-                // Configuration OAuth2 pour redirection vers Keycloak
-                .oauth2Login(spec -> spec
-                        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("/offre_promotion")) // Redirige après succès
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtDecoder(jwtDecoder()))
                 )
-                // Gestion de la déconnexion
-                .logout(spec -> spec
-                        .logoutSuccessHandler(logoutSuccessHandler())
-                )
-                // Gestion des exceptions (redirection si non authentifié)
-                .exceptionHandling(spec -> spec
-                        .authenticationEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/keycloak"))
+                .csrf(csrf -> csrf.disable())
+                .build();
+    }
+
+    @Bean
+    public ReactiveJwtDecoder jwtDecoder() {
+        // Utiliser le nom correct du service Keycloak dans le réseau Docker
+        String jwkSetUri = "http://microservice-keycloak-1:8080/realms/myrealm/protocol/openid-connect/certs";
+        NimbusReactiveJwtDecoder jwtDecoder = NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri).build();
+
+        // Créer un validateur personnalisé pour les issuers
+        OAuth2TokenValidator<Jwt> issuerValidator = jwt -> {
+            String issuer = jwt.getIssuer() != null ? jwt.getIssuer().toString() : null;
+            if (issuer == null || (!issuer.equals("http://microservice-keycloak-1:8080/realms/myrealm") &&
+                    !issuer.equals("http://localhost:8180/realms/myrealm"))) {
+                OAuth2Error error = new OAuth2Error(
+                        "invalid_issuer",
+                        "Invalid issuer: " + issuer,
+                        null
                 );
+                return OAuth2TokenValidatorResult.failure(Collections.singletonList(error));
+            }
+            return OAuth2TokenValidatorResult.success();
+        };
 
-        return http.build();
-    }
+        // Combiner le validateur d'issuer avec d'autres validateurs
+        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(
+                Collections.singletonList(issuerValidator)
+        );
 
-    @Bean
-    public ServerLogoutSuccessHandler logoutSuccessHandler() {
-        RedirectServerLogoutSuccessHandler handler = new RedirectServerLogoutSuccessHandler();
-        handler.setLogoutSuccessUrl(URI.create("http://localhost:8093")); // Redirection après déconnexion
-        return handler;
-    }
-
-    @Bean
-    public ReactiveOAuth2AuthorizedClientService authorizedClientService(
-            ReactiveClientRegistrationRepository clientRegistrationRepository) {
-        return new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrationRepository);
+        jwtDecoder.setJwtValidator(validator);
+        return jwtDecoder;
     }
 }

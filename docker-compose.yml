@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   discovery-service:
     container_name: discovery-service
@@ -14,7 +15,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8761"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
     networks:
       - app-network
 
@@ -26,9 +27,9 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
     ports:
       - "3306:3306"
-    command: --default-authentication-plugin=mysql_native_password # Compatibilité avec MySQL 5.6
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - ./mysql-init:/docker-entrypoint-initdb.d # Scripts d'initialisation
+      - ./mysql-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -52,6 +53,7 @@ services:
       - DB_USER=root
       - DB_PASSWORD=
       - KEYCLOAK_JDBC_PARAMS=useSSL=false&allowPublicKeyRetrieval=true
+      - KC_HOSTNAME_STRICT=false
     ports:
       - "8180:8080"
     command: start-dev --import-realm
@@ -79,6 +81,7 @@ services:
     hostname: gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_PROFILES_ACTIVE=default
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -105,8 +108,6 @@ services:
       discovery-service:
         condition: service_healthy
       mysql-container:
-        condition: service_healthy
-      keycloak:
         condition: service_healthy
     networks:
       - app-network
