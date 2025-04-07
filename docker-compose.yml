@@ -54,6 +54,7 @@ services:
       - DB_PASSWORD=
       - KEYCLOAK_JDBC_PARAMS=useSSL=false&allowPublicKeyRetrieval=true
       - KC_HOSTNAME_STRICT=false
+      - KEYCLOAK_FRONTEND_URL=http://keycloak:8080
     ports:
       - "8180:8080"
     command: start-dev --import-realm

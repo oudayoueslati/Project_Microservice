@@ -87,14 +87,14 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        String jwkSetUri = "http://localhost:8180/realms/myrealm/protocol/openid-connect/certs";
+        String jwkSetUri = "http://keycloak:8080/realms/myrealm/protocol/openid-connect/certs";
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
 
         OAuth2TokenValidator<Jwt> issuerValidator = jwt -> {
             String issuer = jwt.getIssuer() != null ? jwt.getIssuer().toString() : null;
             System.out.println("DEBUG: Issuer reçu = " + issuer);
             if (issuer == null ||
-                    (!issuer.equals("http://microservice-keycloak-1:8080/realms/myrealm") &&
+                    (!issuer.equals("http://keycloak:8080/realms/myrealm") &&
                             !issuer.equals("http://localhost:8180/realms/myrealm"))) {
                 System.out.println("DEBUG: Issuer invalide = " + issuer);
                 return OAuth2TokenValidatorResult.failure(
