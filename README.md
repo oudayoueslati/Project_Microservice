@@ -1,99 +1,96 @@
-<div align="center">
-  <h1>🎉 Offre Promotion Service 🎉</h1>
-  <p>
-    <strong>Une application microservice Spring Boot pour gérer des offres promotionnelles avec des fonctionnalités modernes et sécurisées !</strong>
-  </p>
 
-  <!-- Badges pour ajouter des couleurs -->
-  <img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen.svg" alt="Spring Boot">
-  <img src="https://img.shields.io/badge/Docker-Compose-blue.svg" alt="Docker Compose">
-  <img src="https://img.shields.io/badge/Keycloak-Security-orange.svg" alt="Keycloak">
-  <img src="https://img.shields.io/badge/MySQL-Database-blue.svg" alt="MySQL">
+<div align="center">
+
+# 🎉 Offre Promotion Service 🎉
+
+**Une application microservice Spring Boot pour gérer des offres promotionnelles avec des fonctionnalités modernes et sécurisées.**
+
+<img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen.svg" alt="Spring Boot">
+<img src="https://img.shields.io/badge/Docker-Compose-blue.svg" alt="Docker Compose">
+<img src="https://img.shields.io/badge/Keycloak-Security-orange.svg" alt="Keycloak">
+<img src="https://img.shields.io/badge/MySQL-Database-blue.svg" alt="MySQL">
+
 </div>
 
 ---
 
-## 🌟 À propos du projet
+## 📌 À propos du projet
 
-**Offre Promotion Service** est une application microservice développée avec **Spring Boot** dans le cadre d'un projet de gestion des offres promotionnelles. Ce projet met en œuvre une API REST complète pour gérer des offres, avec des fonctionnalités avancées telles que la sécurisation via **Keycloak**, la génération de PDF, la création de QR codes, et l'envoi d'e-mails automatisés. L'application est entièrement dockerisée avec **Docker Compose**, garantissant un déploiement fluide et cohérent.
-
-Ce projet est une démonstration de mes compétences en développement backend, en intégration d'APIs, et en gestion de microservices sécurisés et conteneurisés. 🚀
-
----
-
-## 🎯 Fonctionnalités réalisées
-
-### 1. Gestion des offres (CRUD) 📋
-- **Création d'une API REST** pour gérer les offres promotionnelles :
-  - **Ajouter une offre** : Création d'une nouvelle offre avec des détails comme le nom, la description, les dates de début et de fin, et le pourcentage de remise.
-  - **Récupérer une offre** : Possibilité de consulter les détails d'une offre (à implémenter si nécessaire).
-  - **Mettre à jour une offre** : Modification des informations d'une offre existante (à implémenter si nécessaire).
-  - **Supprimer une offre** : Suppression d'une offre (à implémenter si nécessaire).
-- Les données sont stockées dans une base de données **MySQL**, gérée via **Spring Data JPA**.
-
-### 2. Sécurisation avec Keycloak 🔒
-- Intégration de **Keycloak** pour l'authentification et l'autorisation :
-  - Sécurisation des endpoints avec des tokens **JWT**.
-  - Configuration d'un realm, d'un client, et d'utilisateurs dans Keycloak.
-  - Test des endpoints sécurisés via **Postman** en utilisant des tokens générés par Keycloak.
-
-### 3. Génération de PDF 📄
-- Génération automatique de documents PDF pour chaque offre :
-  - Le PDF inclut les détails de l'offre (nom, description, dates, pourcentage de remise).
-  - Utilisation d'une bibliothèque comme **iText** ou **Apache PDFBox** pour créer les PDF.
-
-### 4. Génération de QR codes 📲
-- Création de QR codes pour chaque offre :
-  - Le QR code contient un lien vers les détails de l'offre (par exemple, `http://localhost:8093/offre_promotion/offer/{id}`).
-  - Utilisation de la bibliothèque **ZXing** pour générer les QR codes.
-  - Les QR codes peuvent être intégrés dans les PDF ou utilisés séparément.
-
-### 5. Envoi d'e-mails automatisés 📧
-- Envoi d'e-mails automatiques lorsqu'une nouvelle offre est ajoutée :
-  - L'e-mail contient les détails de l'offre (nom, description, dates, remise).
-  - Configuration de l'envoi d'e-mails via **Gmail** avec **Spring Mail**.
-  - Gestion des erreurs d'envoi avec des logs détaillés.
-
-### 6. Dockerisation avec Docker Compose 🐳
-- Conteneurisation complète de l'application à l'aide de **Docker** et **Docker Compose** :
-  - Création d'un fichier `docker-compose.yml` pour orchestrer les services suivants :
-    - L'application Spring Boot (`offre-promotion-service`).
-    - Une base de données **MySQL** pour stocker les offres.
-    - Un serveur **Keycloak** pour l'authentification.
-  - Simplification du déploiement et de l'exécution dans un environnement conteneurisé.
+Ce projet est une API REST sécurisée développée avec **Spring Boot** dans un contexte microservices, permettant la gestion des offres promotionnelles.  
+Les fonctionnalités incluent la sécurisation via **Keycloak**, la génération de **PDF**, de **QR Codes**, l’envoi d’**emails automatiques**, et le tout est **dockerisé** avec Docker Compose.
 
 ---
 
-## 🛠️ Technologies utilisées
+## ✅ Fonctionnalités réalisées
 
-- **Spring Boot** : Framework principal pour le développement de l'API REST.
-- **Spring Data JPA** : Gestion de la persistance des données avec une base de données MySQL.
-- **Spring Mail** : Envoi d'e-mails automatisés via Gmail.
-- **Keycloak** : Authentification et autorisation basées sur des tokens JWT.
-- **ZXing** : Génération de QR codes.
-- **iText/Apache PDFBox** : Génération de PDF (selon votre implémentation).
-- **Docker** et **Docker Compose** : Conteneurisation et orchestration des services.
-- **Postman** : Test des endpoints sécurisés avec des tokens JWT.
-
----
-
-## 🚀 Mon travail en résumé
-
-Ce projet est une vitrine de mes compétences en développement backend et en gestion de microservices. Voici ce que j'ai accompli :
-
-- **Développement d'une API REST sécurisée** : J'ai créé une API complète pour gérer les offres promotionnelles, avec des opérations CRUD et une sécurisation via Keycloak.
-- **Intégration de fonctionnalités avancées** : J'ai implémenté la génération de PDF, de QR codes, et l'envoi d'e-mails automatisés, rendant l'application plus interactive et pratique.
-- **Conteneurisation** : J'ai dockerisé l'application avec Docker Compose, incluant tous les services nécessaires (application, base de données, Keycloak), pour un déploiement simplifié.
-- **Tests et validation** : J'ai testé les endpoints sécurisés avec Postman en utilisant des tokens JWT générés par Keycloak, garantissant la robustesse de l'application.
-
-Ce projet m'a permis de maîtriser des concepts clés comme le développement backend, la sécurisation des APIs, et la conteneurisation, tout en suivant les bonnes pratiques de développement logiciel. 🌟
+- 🔁 **CRUD complet** sur les offres promotionnelles (création, lecture, mise à jour, suppression)
+- 🔐 **Authentification & autorisation** via **Keycloak** avec gestion des rôles
+- 📧 **Envoi d’e-mails** automatiques après création d'une offre
+- 📄 **Génération de fichiers PDF** contenant les détails d’une offre
+- 📲 **Création de QR Codes** pour chaque offre
+- 🐳 **Déploiement avec Docker Compose** (Spring Boot + MySQL + Keycloak)
+- 🧪 **Tests API sécurisés avec Postman**
 
 ---
 
-## 🖥️ Commandes utiles
+## ⚙️ Commandes utiles
 
-Voici quelques commandes pour exécuter le projet, présentées de manière structurée et visuellement attrayante :
+### 1. Lancer les conteneurs avec Docker Compose 🟢
 
-### 🟢 Lancer les conteneurs avec Docker Compose
 ```bash
 docker-compose up -d --build
+```
+
+> Cette commande démarre l'application, la base de données MySQL, et Keycloak en mode détaché (`-d`) tout en reconstruisant les images si nécessaire (`--build`).
+
+---
+
+### 2. Consulter les logs de l'application 🔍
+
+```bash
+docker logs offre-promotion-service --tail 300
+```
+
+> Cette commande affiche les **300 dernières lignes** des logs du conteneur `offre-promotion-service`.
+
+---
+
+### 3. Arrêter les conteneurs 🛑
+
+```bash
+docker-compose down
+```
+
+> Cette commande **arrête et supprime** les conteneurs, volumes et réseaux créés.
+
+---
+
+## 🎓 Ce que j’ai appris
+
+- ✅ Structurer une API REST propre avec Spring Boot
+- ✅ Gérer la **sécurité** avec **Keycloak** (OAuth2, JWT, rôles)
+- ✅ Automatiser l’**envoi de mails** via SMTP
+- ✅ Générer des **PDF** dynamiques en Java
+- ✅ Intégrer un système de **QR Codes** pour l’identification rapide
+- ✅ Conteneuriser l'ensemble avec **Docker Compose**
+- ✅ Tester des endpoints protégés avec **Postman + Tokens Keycloak**
+
+---
+
+## 🚀 Améliorations futures
+
+- ✨ Ajouter une interface utilisateur en **Angular** ou **React**
+- 🔔 Ajouter des **notifications temps réel**
+- 📱 Créer une version **responsive mobile**
+- 📦 Ajouter une **base NoSQL** pour les logs (ex: MongoDB)
+- 📊 Intégrer un outil de monitoring (Prometheus + Grafana)
+- 🧪 Implémenter des **tests automatisés** (JUnit, Mockito)
+
+---
+
+<div align="center">
+
+### 💡 Merci d’avoir consulté ce projet !  
+Ce projet m’a permis de monter en compétence sur des **techniques modernes de développement backend sécurisé et déployable**.
+
+</div>
