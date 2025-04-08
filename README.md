@@ -79,10 +79,8 @@ docker-compose down
 
 ## 🚀 Améliorations futures
 
-- ✨ Ajouter une interface utilisateur en **Angular** ou **React**
+- ✨ Ajouter une interface utilisateur en **Angular** 
 - 🔔 Ajouter des **notifications temps réel**
-- 📱 Créer une version **responsive mobile**
-- 📦 Ajouter une **base NoSQL** pour les logs (ex: MongoDB)
 - 📊 Intégrer un outil de monitoring (Prometheus + Grafana)
 - 🧪 Implémenter des **tests automatisés** (JUnit, Mockito)
 
