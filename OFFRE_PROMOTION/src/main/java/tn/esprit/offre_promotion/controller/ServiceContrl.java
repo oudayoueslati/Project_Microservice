@@ -6,21 +6,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.offre_promotion.entities.Offer;
+import tn.esprit.offre_promotion.service.EmailService;
 import tn.esprit.offre_promotion.service.IService;
 import tn.esprit.offre_promotion.util.PdfGenerator;
 
-
-import java.util.Collection;
 import java.util.List;
 
 @RestController
 public class ServiceContrl {
 
     private final IService service;
+    private final EmailService emailService;
 
     @Autowired
-    public ServiceContrl(IService service) {
+    public ServiceContrl(IService service, EmailService emailService) {
         this.service = service;
+        this.emailService = emailService;
     }
 
     @GetMapping("/")
@@ -30,7 +31,9 @@ public class ServiceContrl {
 
     @PostMapping("/addOffer")
     public Offer addOffer(@RequestBody Offer offer) {
-        return service.addOffer(offer);
+        Offer savedOffer = service.addOffer(offer);
+        emailService.sendNewOfferEmail(savedOffer);
+        return savedOffer;
     }
 
     @GetMapping("/AllOffer")
@@ -52,6 +55,7 @@ public class ServiceContrl {
     public Offer updateOffer(@PathVariable int id, @RequestBody Offer offer) {
         return service.updateById(id, offer);
     }
+
     @GetMapping("/generateOfferPdf/{id}")
     public ResponseEntity<byte[]> generateOfferPdf(@PathVariable int id) throws Exception {
         // Récupérer l'offre par ID
@@ -74,5 +78,4 @@ public class ServiceContrl {
                 .headers(headers)
                 .body(pdfBytes);
     }
-
 }
