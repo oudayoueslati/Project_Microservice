@@ -24,7 +24,7 @@ Les fonctionnalités incluent la sécurisation via **Keycloak**, la génération
 ## ✅ Fonctionnalités réalisées
 
 - 🔁 **CRUD complet** sur les offres promotionnelles (création, lecture, mise à jour, suppression)
-- 🔐 **Authentification & autorisation** via **Keycloak** avec gestion des rôles
+- 🔐 **Authentification & autorisation** via **Keycloak** 
 - 📧 **Envoi d’e-mails** automatiques après création d'une offre
 - 📄 **Génération de fichiers PDF** contenant les détails d’une offre
 - 📲 **Création de QR Codes** pour chaque offre
@@ -45,16 +45,6 @@ docker-compose up -d --build
 
 ---
 
-### 2. Consulter les logs de l'application 🔍
-
-```bash
-docker logs offre-promotion-service --tail 300
-```
-
-> Cette commande affiche les **300 dernières lignes** des logs du conteneur `offre-promotion-service`.
-
----
-
 ### 3. Arrêter les conteneurs 🛑
 
 ```bash
@@ -68,9 +58,9 @@ docker-compose down
 ## 🎓 Ce que j’ai appris
 
 - ✅ Structurer une API REST propre avec Spring Boot
-- ✅ Gérer la **sécurité** avec **Keycloak** (OAuth2, JWT, rôles)
+- ✅ Gérer la **sécurité** avec **Keycloak** (OAuth2, JWT)
 - ✅ Automatiser l’**envoi de mails** via SMTP
-- ✅ Générer des **PDF** dynamiques en Java
+- ✅ Générer des **PDF** dynamiques 
 - ✅ Intégrer un système de **QR Codes** pour l’identification rapide
 - ✅ Conteneuriser l'ensemble avec **Docker Compose**
 - ✅ Tester des endpoints protégés avec **Postman + Tokens Keycloak**
